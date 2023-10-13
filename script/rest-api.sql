@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-10-2023 a las 03:18:56
+-- Tiempo de generación: 13-10-2023 a las 15:12:22
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 7.4.29
 
@@ -26,6 +26,9 @@ SET time_zone = "+00:00";
 --
 -- Estructura de tabla para la tabla `libros`
 --
+-- Creación: 13-10-2023 a las 12:44:34
+-- Última actualización: 13-10-2023 a las 13:08:55
+--
 
 CREATE TABLE `libros` (
   `id` int(11) NOT NULL,
@@ -41,7 +44,9 @@ CREATE TABLE `libros` (
 --
 
 INSERT INTO `libros` (`id`, `nombre`, `autor`, `categoria`, `anio_publicacion`, `isbn`) VALUES
-(1, 'Colombian Psycho', 'Santiago Gamboa', 'ficcion', '2022-06-02', '9789585118799');
+(1, 'Colombian Psycho', 'Santiago Gamboa', 'ficcion', '2022-06-02', '9789585118799'),
+(3, 'Despues', 'Stephen King', 'terror', '2021-02-02', '9786073806206'),
+(6, 'Doctor Sleep', 'Stephen King', 'horror', '2013-09-24', '9781982131807');
 
 --
 -- Índices para tablas volcadas
@@ -61,7 +66,7 @@ ALTER TABLE `libros`
 -- AUTO_INCREMENT de la tabla `libros`
 --
 ALTER TABLE `libros`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
