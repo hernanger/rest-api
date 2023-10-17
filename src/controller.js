@@ -6,6 +6,11 @@ class librosController {
         const [result] = await pool.query('SELECT * FROM libros');
         res.json(result);
     }
+    async getOne(req, res){
+        const id = req.params.id;
+        const [result] = await pool.query(`SELECT * FROM libros WHERE id=(?)`, [libro.id]);
+        res.json(result[0]);
+    }
     async add(req, res){
         const libro = req.body;
         const [result] = await pool.query(`INSERT INTO libros(nombre, autor, categoria, anio_publicacion, isbn) VALUES (?, ?, ?, ?, ?)`,[libro.nombre, libro.autor, libro.categoria, libro.anio_publicacion, libro.isbn]);
