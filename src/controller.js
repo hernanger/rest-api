@@ -3,14 +3,28 @@ import {pool} from "./database.js";
 class librosController {
     
     async getAll(req, res){
-        const [result] = await pool.query('SELECT * FROM libros');
-        res.json(result);
+        try {
+            const [result] = await pool.query('SELECT * FROM libros');
+            res.json(result);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Hubo un error al obtener los libros.' });
+        }
     }
     async getOne(req, res){
-        const id = req.params.id;
-        const [result] = await pool.query(`SELECT * FROM libros WHERE id=(?)`, [libro.id]);
-        res.json(result[0]);
+        try {
+            const id = req.params.id;
+            const [result] = await pool.query(`SELECT * FROM libros WHERE id=(?)`, [id]);
+            if (result.length === 0) {
+                throw new Error('Libro no encontrado.');
+            }
+            res.json(result[0]);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Hubo un error al obtener el libro.' });
+        }
     }
+    
     async add(req, res){
         const libro = req.body;
         const [result] = await pool.query(`INSERT INTO libros(nombre, autor, categoria, anio_publicacion, isbn) VALUES (?, ?, ?, ?, ?)`,[libro.nombre, libro.autor, libro.categoria, libro.anio_publicacion, libro.isbn]);
