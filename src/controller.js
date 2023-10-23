@@ -21,7 +21,7 @@ class librosController {
             res.json(result[0]);
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'id inexistente.' });
+            res.status(404).json({ error: 'id inexistente.' });
         }
     }
     async add(req, res){
