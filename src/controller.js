@@ -46,31 +46,39 @@ class librosController {
     }
     
     async delete(req, res){
-        const libro = req.body;
-        const [result] = await pool.query(`DELETE FROM libros WHERE id=(?)`,[libro.id]);
-        res.json({"Registros eliminados": result.affectedRows});
-
-    }
+        try {
+            const libro = req.body;
+            const [result] = await pool.query(`DELETE FROM libros WHERE id=(?)`,[libro.id]);
+            if (result.affectedRows === 0) {
+                throw new Error('No se encontró un libro con el ID proporcionado.');
+            }
+            res.json({"Registros eliminados": result.affectedRows});
+        } catch (error) {
+            console.error(error);
+            if (error.message === 'No se encontró un libro con el ID proporcionado.') {
+                res.status(404).json({ error: 'No se encontró un libro con el ID proporcionado.' });
+            } else {
+                res.status(500).json({ error: 'Hubo un error al eliminar el libro.' });
+            }
+        }
+    }    
     async delete(req, res){
         try {
             const libro = req.body;
             const [result] = await pool.query(`DELETE FROM libros WHERE isbn=(?)`,[libro.isbn]);
             if (result.affectedRows === 0) {
-                throw new Error('No se encontró un libro con el ISBN proporcionado.');
+                throw new Error('No se encontró un libro con el ISBN o ID proporcionado.');
             }
             res.json({"Registros eliminados": result.affectedRows});
         } catch (error) {
             console.error(error);
             if (error.message === 'No se encontró un libro con el ISBN proporcionado.') {
-                res.status(404).json({ error: 'No se encontró un libro con el ISBN proporcionado.' });
+                res.status(404).json({ error: 'No se encontró un libro con el ISBN o ID proporcionado.' });
             } else {
                 res.status(500).json({ error: 'Hubo un error al eliminar el libro' });
             }
         }
     }
-    
-    
-    
     async update(req, res){
         try {
             const libro = req.body;
@@ -81,7 +89,7 @@ class librosController {
             res.json({"Registros Actualizados": result.changedRows});
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Hubo un error al actualizar el libro, compruebe los campos requeridos.' });
+            res.status(500).json({ error: 'Hubo un error al actualizar el libro.' });
         }
     }
     
