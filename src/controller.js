@@ -89,9 +89,14 @@ class librosController {
             res.json({"Registros Actualizados": result.changedRows});
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Hubo un error al actualizar el libro.' });
+            if (error.message === 'No se encontró un libro con el ID proporcionado o los datos proporcionados ya existen.') {
+                res.status(404).json({ error: 'No se encontró un libro con el ID proporcionado.' });
+            } else {
+                res.status(500).json({ error: 'Hubo un error al actualizar el libro.' });
+            }
         }
     }
+    
     
 }
 
