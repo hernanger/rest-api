@@ -33,11 +33,15 @@ class librosController {
     async add(req, res){
         try {
             const libro = req.body;
+            if (!libro.nombre || !libro.autor || !libro.categoria || !libro.anio_publicacion || !libro.isbn) {
+                res.status(404).json({ error: 'Faltan campos requeridos' });
+                return;
+            }
             const [result] = await pool.query(`INSERT INTO libros(nombre, autor, categoria, anio_publicacion, isbn) VALUES (?, ?, ?, ?, ?)`,[libro.nombre, libro.autor, libro.categoria, libro.anio_publicacion, libro.isbn]);
             res.json({"Id insertado": result.insertId});
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Hubo un error al agregar el libro, compruebe los campos requeridos' });
+            res.status(500).json({ error: 'Hubo un error al agregar el libro' });
         }
     }
     
@@ -57,9 +61,14 @@ class librosController {
             res.json({"Registros eliminados": result.affectedRows});
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Hubo un error al eliminar el libro, compruebe que el isbn este correcto.' });
+            if (error.message === 'No se encontró un libro con el ISBN proporcionado.') {
+                res.status(404).json({ error: 'No se encontró un libro con el ISBN proporcionado.' });
+            } else {
+                res.status(500).json({ error: 'Hubo un error al eliminar el libro' });
+            }
         }
     }
+    
     
     
     async update(req, res){
