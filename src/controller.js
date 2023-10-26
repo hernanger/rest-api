@@ -5,7 +5,11 @@ class librosController {
     async getAll(req, res){
         try {
             const [result] = await pool.query('SELECT * FROM libros');
-            res.json(result);
+            if (result.length > 0) {
+                res.json(result);
+            } else {
+                res.status(404).json({ error: 'No se encontraron libros.' });
+            }
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Hubo un error al obtener los libros.' });
@@ -16,14 +20,16 @@ class librosController {
             const id = req.params.id;
             const [result] = await pool.query(`SELECT * FROM libros WHERE id=(?)`, [id]);
             if (result.length === 0) {
-                throw new Error('Libro no encontrado.');
+                res.status(404).json({ error: 'Libro no encontrado. corrobore el id' });
+            } else {
+                res.json(result[0]);
             }
-            res.json(result[0]);
         } catch (error) {
             console.error(error);
-            res.status(404).json({ error: 'id inexistente.' });
+            res.status(500).json({ error: 'Hubo un error al obtener el libro' });
         }
     }
+    
     async add(req, res){
         try {
             const libro = req.body;
